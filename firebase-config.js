@@ -1,11 +1,11 @@
-// Hier deine Firebase-Web-Konfiguration eintragen (Firebase Console > Projekteinstellungen > Deine Apps > Web-App)
+// Firebase-Web-Konfiguration (Projekt: ac-performance-worklog)
 export const firebaseConfig = {
-  apiKey: "DEIN_API_KEY",
-  authDomain: "DEIN_PROJEKT.firebaseapp.com",
-  projectId: "DEIN_PROJEKT",
-  storageBucket: "DEIN_PROJEKT.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "DEINE_APP_ID"
+  apiKey: "AIzaSyB_CRQ1vxCfeheXsaU35eWK9oujNrOzcVQ",
+  authDomain: "ac-performance-worklog.firebaseapp.com",
+  projectId: "ac-performance-worklog",
+  storageBucket: "ac-performance-worklog.firebasestorage.app",
+  messagingSenderId: "558001096879",
+  appId: "1:558001096879:web:b3d73a034c71a127896c5a"
 };
 
 // Wochenziel in Stunden
