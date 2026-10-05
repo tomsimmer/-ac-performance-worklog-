@@ -22,7 +22,7 @@ button,input,textarea,select{font:inherit} button{cursor:pointer;border:0} .app{
 .summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}.summary-card{background:var(--card2);border:1px solid var(--border);border-radius:17px;padding:16px}.summary-card span{display:block;color:var(--muted);font-size:11px}.summary-card strong{display:block;font:800 28px 'Barlow Condensed',sans-serif;margin-top:5px}.summary-card em{font-style:normal;color:var(--petrolLight);font-size:11px}
 .timeline{border:1px solid var(--border);background:var(--card2);border-radius:19px;overflow:hidden}.form-card{border:1px solid var(--border);background:var(--card2);border-radius:19px;padding:6px 16px 16px;margin-top:14px}
 .edit{background:none;color:var(--petrolLight);font-size:11px;font-weight:700;margin-top:5px;padding:0}.edit.del{color:var(--red)}
-.list-head{padding:18px 0 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}.list-head h1{margin:0;font:800 33px 'Barlow Condensed',sans-serif}.filter{border:1px solid var(--border);color:var(--text);background:var(--card2);border-radius:11px;padding:8px 10px;font-size:12px;width:auto}
+.list-head{padding:18px 0 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}.list-head h1{margin:0;font:800 33px 'Barlow Condensed',sans-serif}.filter{border:1px solid var(--border);color:var(--text);background:var(--card2);border-radius:11px;padding:8px 10px;font-size:12px;width:auto;max-width:60%}
 .day-group{margin-top:18px}.day-label{font-size:12px;font-weight:700;margin:0 2px 9px;color:var(--muted)}.day-total{float:right;color:var(--petrolLight);font-size:11px}
 .history-card{border:1px solid var(--border);border-radius:17px;background:var(--card2);padding:15px;margin-bottom:9px}.history-top{display:flex;justify-content:space-between;gap:12px}.history-top strong{font-size:13px}.duration{font:800 21px 'Barlow Condensed',sans-serif;color:var(--petrolLight)}.history-card p{font-size:12px;color:var(--muted);margin:6px 0 11px;line-height:1.45;white-space:pre-wrap}.chips{display:flex;gap:12px;align-items:center}.chip{font-size:10px;padding:5px 8px;border-radius:20px;background:rgba(51,174,172,.12);color:var(--petrolLight)}.chips .edit{margin:0}.chips .edit:first-of-type{margin-left:auto}
 .empty{color:var(--muted);font-size:12px;padding:18px;text-align:center}
@@ -30,6 +30,7 @@ button,input,textarea,select{font:inherit} button{cursor:pointer;border:0} .app{
 .bottom-nav{position:fixed;z-index:5;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(544px,calc(100% - 36px));padding:8px;background:rgba(10,31,35,.88);border:1px solid var(--border);border-radius:19px;display:grid;grid-template-columns:repeat(3,1fr);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 13px 35px rgba(0,0,0,.26)}.nav-btn{padding:10px 5px;background:transparent;color:var(--faint);font-size:10px;font-weight:700;display:grid;gap:5px;place-items:center}.nav-btn svg{width:19px;height:19px}.nav-btn.active{color:var(--petrolLight)}
 .label{font-size:11px;font-weight:700;color:var(--muted);display:block;margin:17px 0 8px}
 textarea,input[type=text],input[type=email],input[type=password],input[type=month],input[type=datetime-local],select{width:100%;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.045);color:var(--text);padding:13px;font-size:16px;outline:none;font-family:inherit}select option{background:#10282c;color:var(--text)}textarea{height:105px;resize:none;line-height:1.45}
+select.filter{width:auto;padding:8px 10px;font-size:12px;border-radius:11px}
 .categories{display:flex;gap:8px;flex-wrap:wrap}.category{border:1px solid var(--border);border-radius:12px;padding:9px 11px;font-size:11px;font-weight:600;background:rgba(255,255,255,.025);color:var(--muted)}.category.selected{color:#042023;border-color:var(--petrol);background:var(--petrol)}
 .voice{width:100%;border:1px dashed rgba(103,215,209,.45);background:rgba(51,174,172,.08);color:var(--petrolLight);border-radius:14px;margin-top:9px;padding:12px;font-size:12px;font-weight:700}
 .err{color:var(--red);font-size:12px;margin-top:10px;min-height:1.2em}
@@ -93,11 +94,11 @@ dialog.top-layer-toast{}
       <div class="section-title"><h2>Heute im Überblick</h2><button onclick="showView('history')">Alle Buchungen</button></div>
       <div class="summary">
         <div class="summary-card"><span>Heute</span><strong id="todayTotal">0:00 h</strong><em id="todayCount">0 Buchungen</em></div>
-        <div class="summary-card"><span>Diese Woche</span><strong id="weekTotal">0:00 h</strong><em>seit Montag</em></div>
+        <div class="summary-card"><span>Aktueller Block</span><strong id="weekTotal">0:00 h</strong><em id="weekEm">Block 1</em></div>
       </div>
 
       <div class="cycle-card" id="weekCard">
-        <div class="cycle-top"><div><div class="eyebrow">Wochenziel</div><h3 id="weekTitle">Wochenstunden</h3></div><span class="cycle-status" id="weekPct">0 %</span></div>
+        <div class="cycle-top"><div><div class="eyebrow">Abrechnungsblock</div><h3 id="weekTitle">Block 1 · 22 Stunden</h3></div><span class="cycle-status" id="weekPct">0 %</span></div>
         <div class="cycle-numbers"><strong id="weekBig">0:00 h</strong><span id="weekOf"></span></div>
         <div class="progress-track"><i id="bar"></i></div>
         <div class="cycle-bottom"><span id="weekText"></span></div>
@@ -108,9 +109,9 @@ dialog.top-layer-toast{}
     </section>
 
     <section id="history" class="view">
-      <div class="list-head"><h1>Meine Zeiten</h1><input id="month" type="month" class="filter"></div>
+      <div class="list-head"><h1>Meine Zeiten</h1><select id="blockSel" class="filter" aria-label="Abrechnungsblock wählen"></select></div>
       <div class="summary">
-        <div class="summary-card"><span>Monat bisher</span><strong id="monthTotal">0:00 h</strong><em id="monthDays">0 Arbeitstage</em></div>
+        <div class="summary-card"><span id="histLabel">Block gesamt</span><strong id="monthTotal">0:00 h</strong><em id="monthDays">0 Arbeitstage</em></div>
         <div class="summary-card"><span>Ø pro Arbeitstag</span><strong id="monthAvg">0:00 h</strong><em>Erfasste Zeit</em></div>
       </div>
       <div id="list" style="margin-top:20px"></div>
@@ -119,13 +120,13 @@ dialog.top-layer-toast{}
 
     <section id="reports" class="view">
       <div class="list-head"><h1>Auswertung</h1></div>
-      <div class="report-card"><div class="eyebrow">Arbeitszeitübersicht</div><h2 id="repTotal">0 Std. 00 Min.</h2><p id="repSub">Erfasste Arbeitszeit</p></div>
+      <div class="report-card"><div class="eyebrow" id="repEyebrow">Arbeitszeitübersicht</div><h2 id="repTotal">0 Std. 00 Min.</h2><p id="repSub">Erfasste Arbeitszeit</p></div>
       <div class="section-title"><h2>Nach Tätigkeitsbereich</h2></div>
       <div class="timeline" style="padding:7px 16px" id="catBars"></div>
       <div class="section-title"><h2>Export</h2></div>
       <div class="timeline" style="padding:16px">
         <strong style="font-size:13px">Arbeitsnachweis als PDF</strong>
-        <p style="color:var(--muted);font-size:11px;line-height:1.45;margin:5px 0 13px">Für den im Reiter „Zeiten“ gewählten Monat, mit Unterschriftszeilen und Monatssumme.</p>
+        <p style="color:var(--muted);font-size:11px;line-height:1.45;margin:5px 0 13px">Für den im Reiter „Zeiten“ gewählten Abrechnungsblock, mit Unterschriftszeilen und Summe.</p>
         <button id="pdfBtn" class="primary" style="margin:0;padding:14px">PDF EXPORTIEREN</button>
       </div>
     </section>
@@ -182,6 +183,7 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
 
 const $ = id => document.getElementById(id);
 const CATS = ['Content in der Praxis','Technik in der Praxis','Social Media','Videoschnitt','Website','Print & Design','Verwaltung'];
+const GOAL = WEEKLY_HOURS * 3600000;
 
 /* Kategorie-Chips */
 function buildChips(id){
@@ -221,19 +223,51 @@ try {
   throw e;
 }
 
-let user = null, entries = [], unsub = null, mode = 'login', editId = null;
+let user = null, entries = [], unsub = null, mode = 'login', editId = null, sel = 'cur', optKey = '';
 
 const pad = n => String(n).padStart(2,'0');
 const toLocal = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
 const fmtDate = ms => new Date(ms).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
+const fmtShort = ms => new Date(ms).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
 const fmtTime = ms => new Date(ms).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
 const fmtDur = ms => { const m = Math.max(0,Math.round(ms/60000)); return `${Math.floor(m/60)}:${pad(m%60)} h`; };
 const fmtClock = ms => { const s = Math.max(0,Math.floor(ms/1000)); return `${pad(Math.floor(s/3600))}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`; };
 const esc = s => String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const dur = e => (e.end ?? Date.now()) - e.start;
 
-function mondayStart(){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d.getTime(); }
 function dayStart(){ const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+
+/* 22-Stunden-Blöcke: alle Buchungen chronologisch aufsummiert, jeweils nach 22 h beginnt ein neuer Block (unabhängig von Monat/Woche) */
+function computeBlocks(){
+  const asc = [...entries].sort((a,b) => a.start - b.start);
+  const blocks = [];
+  let cum = 0;
+  asc.forEach(e => {
+    let remaining = Math.max(0, dur(e));
+    let pos = cum;
+    if (remaining === 0) {
+      const bi = Math.floor(pos / GOAL);
+      blocks[bi] = blocks[bi] || {n:bi+1, entries:[], ms:0};
+      blocks[bi].entries.push(e);
+    }
+    while (remaining > 0) {
+      const bi = Math.floor(pos / GOAL);
+      const room = (bi + 1) * GOAL - pos;
+      const take = Math.min(room, remaining);
+      blocks[bi] = blocks[bi] || {n:bi+1, entries:[], ms:0};
+      blocks[bi].ms += take;
+      if (!blocks[bi].entries.includes(e)) blocks[bi].entries.push(e);
+      pos += take; remaining -= take;
+    }
+    cum += Math.max(0, dur(e));
+  });
+  return {blocks, total: cum};
+}
+function blockRange(b){
+  const first = b.entries[0].start;
+  const last = Math.max(...b.entries.map(e => e.end ?? Date.now()));
+  return `${fmtShort(first)} – ${fmtShort(last)}`;
+}
 
 /* Auth */
 function setMode(m){
@@ -271,7 +305,7 @@ onAuthStateChanged(auth, u => {
   $('profile').classList.toggle('hidden', !u);
   if (u) {
     $('profile').textContent = (u.email||'?').slice(0,2);
-    $('month').value = new Date().toISOString().slice(0,7);
+    sel = 'cur'; optKey = '';
     const q = query(collection(db,'users',u.uid,'entries'), orderBy('start','desc'));
     unsub = onSnapshot(q, snap => {
       entries = snap.docs.map(d => ({id:d.id, ...d.data()}));
@@ -361,10 +395,13 @@ $('dSave').onclick = async () => {
 };
 
 /* Render */
-function monthEntries(){
-  const [y,m] = $('month').value.split('-').map(Number);
-  const a = new Date(y,m-1,1).getTime(), b = new Date(y,m,1).getTime();
-  return entries.filter(e => e.start>=a && e.start<b);
+function chosenBlocks(){
+  const {blocks} = computeBlocks();
+  if (!blocks.length) return {blocks, chosen: [], eff: 'all'};
+  const latest = String(blocks[blocks.length-1].n);
+  const eff = sel === 'cur' ? latest : sel;
+  const chosen = eff === 'all' ? blocks : blocks.filter(b => String(b.n) === eff);
+  return {blocks, chosen: chosen.length ? chosen : blocks.slice(-1), eff: chosen.length ? eff : latest};
 }
 function cardHTML(e){
   return `<div class="history-card">
@@ -403,44 +440,73 @@ function render(){
   $('todayCount').textContent = `${todayList.length} Buchung${todayList.length===1?'':'en'}`;
   $('todayList').innerHTML = todayList.length ? todayList.map(cardHTML).join('') : '<div class="timeline"><div class="empty">Heute noch keine Buchung.</div></div>';
 
-  const ws = mondayStart();
-  const total = entries.filter(e => e.start>=ws).reduce((s,e)=>s+dur(e),0);
-  const goal = WEEKLY_HOURS*3600000;
-  const pct = Math.min(100,total/goal*100);
-  $('bar').style.width = pct+'%';
-  $('weekCard').classList.toggle('cycle-complete', total>=goal);
-  $('weekTotal').textContent = fmtDur(total);
-  $('weekBig').textContent = fmtDur(total);
+  /* aktueller 22-h-Block */
+  const {blocks, total} = computeBlocks();
+  const done = Math.floor(total / GOAL);
+  const rem = total - done * GOAL;
+  const justFull = total > 0 && rem === 0;
+  const shown = justFull ? GOAL : rem;
+  const blockNo = justFull ? done : done + 1;
+  const pct = Math.min(100, shown / GOAL * 100);
+  $('bar').style.width = pct + '%';
+  $('weekCard').classList.toggle('cycle-complete', justFull);
+  $('weekTotal').textContent = fmtDur(shown);
+  $('weekEm').textContent = `Block ${blockNo}`;
+  $('weekBig').textContent = fmtDur(shown);
   $('weekOf').textContent = `von ${WEEKLY_HOURS}:00 h`;
-  $('weekPct').textContent = Math.round(pct)+' %';
-  $('weekTitle').textContent = `${WEEKLY_HOURS}-Stunden-Ziel`;
-  const rest = goal-total;
-  $('weekText').textContent = rest>0 ? `Noch ${fmtDur(rest)} bis zum Ziel` : `Ziel erreicht${rest<0?' (+'+fmtDur(-rest)+')':''}`;
+  $('weekPct').textContent = Math.round(pct) + ' %';
+  $('weekTitle').textContent = `Block ${blockNo} · ${WEEKLY_HOURS} Stunden`;
+  const doneTxt = done > 0 ? `${done} Block${done===1?'':'e'} abgeschlossen · ` : '';
+  $('weekText').textContent = justFull
+    ? `Block ${done} voll – die nächste Buchung startet Block ${done+1}`
+    : `${doneTxt}noch ${fmtDur(GOAL - rem)} bis Block ${blockNo} voll`;
 
-  const list = monthEntries();
-  const mTotal = list.reduce((s,e)=>s+dur(e),0);
-  const days = new Set(list.map(e => new Date(e.start).toDateString())).size;
+  /* Blockauswahl */
+  const optList = [...blocks].reverse();
+  const key = optList.map(b => `${b.n}|${blockRange(b)}|${b.ms>=GOAL?1:0}`).join(';');
+  if (key !== optKey) {
+    optKey = key;
+    $('blockSel').innerHTML = '<option value="all">Alle Blöcke</option>' + optList.map(b => `<option value="${b.n}">Block ${b.n} · ${blockRange(b)}${b.ms>=GOAL?' ✓':''}</option>`).join('');
+  }
+  const {chosen, eff} = chosenBlocks();
+  $('blockSel').value = eff;
+
+  const listEntries = [...new Set(chosen.flatMap(b => b.entries))];
+  const mTotal = chosen.reduce((s,b) => s + b.ms, 0);
+  const days = new Set(listEntries.map(e => new Date(e.start).toDateString())).size;
+  $('histLabel').textContent = eff === 'all' ? 'Alle Blöcke' : `Block ${eff} gesamt`;
   $('monthTotal').textContent = fmtDur(mTotal);
   $('monthDays').textContent = `${days} Arbeitstag${days===1?'':'e'}`;
   $('monthAvg').textContent = days ? fmtDur(mTotal/days) : '0:00 h';
 
-  const groups = {};
-  list.forEach(e => { const k = new Date(e.start).toDateString(); (groups[k] = groups[k] || []).push(e); });
-  $('list').innerHTML = list.length ? Object.values(groups).map(g => {
-    const sum = g.reduce((s,e)=>s+dur(e),0);
-    return `<div class="day-group"><p class="day-label">${fmtDate(g[0].start)} <span class="day-total">${fmtDur(sum)}</span></p>${g.map(cardHTML).join('')}</div>`;
-  }).join('') : '<div class="timeline"><div class="empty">Keine Einträge in diesem Monat.</div></div>';
+  $('list').innerHTML = chosen.length ? [...chosen].reverse().map(b => {
+    const es = [...b.entries].sort((x,y) => y.start - x.start);
+    const groups = {};
+    es.forEach(e => { const k = new Date(e.start).toDateString(); (groups[k] = groups[k] || []).push(e); });
+    const full = b.ms >= GOAL;
+    const head = `<div class="cycle-card ${full?'cycle-complete':''}" style="margin-top:0">
+      <div class="cycle-top"><div><div class="eyebrow">Abrechnungsblock</div><h3>Block ${b.n}</h3></div><span class="cycle-status">${full?'Abgeschlossen':'Läuft'}</span></div>
+      <div class="cycle-numbers"><strong>${fmtDur(b.ms).replace(' h','')}</strong><span>von ${WEEKLY_HOURS}:00 h</span></div>
+      <div class="progress-track"><i style="width:${Math.min(100,b.ms/GOAL*100)}%"></i></div>
+      <div class="cycle-bottom"><span>${blockRange(b)}</span></div></div>`;
+    const body = Object.values(groups).map(g => {
+      const sum = g.reduce((s,e)=>s+dur(e),0);
+      return `<div class="day-group"><p class="day-label">${fmtDate(g[0].start)} <span class="day-total">${fmtDur(sum)}</span></p>${g.map(cardHTML).join('')}</div>`;
+    }).join('');
+    return head + body;
+  }).join('<div style="height:30px"></div>') : '<div class="timeline"><div class="empty">Noch keine Einträge.</div></div>';
 
   const mins = Math.round(mTotal/60000);
+  $('repEyebrow').textContent = eff === 'all' ? 'Alle Blöcke' : `Block ${eff}`;
   $('repTotal').textContent = `${Math.floor(mins/60)} Std. ${pad(mins%60)} Min.`;
   $('repSub').textContent = `Erfasste Arbeitszeit · ${days} Arbeitstag${days===1?'':'e'}`;
   const byCat = {};
-  list.forEach(e => byCat[e.category] = (byCat[e.category]||0) + dur(e));
+  listEntries.forEach(e => byCat[e.category] = (byCat[e.category]||0) + dur(e));
   const rows = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
   const max = rows.length ? rows[0][1] : 1;
   $('catBars').innerHTML = rows.length ? rows.map(([c,v]) => `<div class="bar-row"><span>${esc(c)}</span><div class="bar"><i style="width:${Math.round(v/max*100)}%"></i></div><b>${fmtDur(v).replace(' h','')}</b></div>`).join('') : '<div class="empty">Keine Daten.</div>';
 }
-$('month').onchange = render;
+$('blockSel').onchange = () => { sel = $('blockSel').value; render(); };
 setInterval(() => { if (user) tick(); }, 1000);
 setInterval(() => { if (user) render(); }, 30000);
 const onListClick = async ev => {
@@ -453,13 +519,15 @@ $('todayList').onclick = onListClick;
 
 /* PDF */
 $('pdfBtn').onclick = () => {
-  const list = monthEntries().filter(e=>e.end).sort((a,b)=>a.start-b.start);
+  const {chosen, eff} = chosenBlocks();
+  const list = [...new Set(chosen.flatMap(b => b.entries))].filter(e=>e.end).sort((a,b)=>a.start-b.start);
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF({unit:'mm',format:'a4'});
-  const [y,m] = $('month').value.split('-');
+  const title = eff === 'all' ? 'Alle Blöcke' : `Block ${eff} (${WEEKLY_HOURS} Stunden)`;
+  const range = list.length ? `${fmtShort(list[0].start)} – ${fmtShort(list[list.length-1].end)}` : '';
   let yy = 20;
   pdf.setFontSize(16); pdf.text('Arbeitsnachweis – AC Performance', 15, yy); yy+=8;
-  pdf.setFontSize(11); pdf.text(`Monat: ${m}/${y}   ·   ${user.email}`, 15, yy); yy+=10;
+  pdf.setFontSize(11); pdf.text(`${title}   ·   ${range}   ·   ${user.email}`, 15, yy); yy+=10;
   pdf.setFont(undefined,'bold'); pdf.text('Datum',15,yy); pdf.text('Zeit',50,yy); pdf.text('Dauer',80,yy); pdf.text('Tätigkeit',100,yy); pdf.setFont(undefined,'normal'); yy+=2; pdf.line(15,yy,195,yy); yy+=6;
   let total=0;
   list.forEach(e => {
@@ -477,7 +545,7 @@ $('pdfBtn').onclick = () => {
   pdf.setFont(undefined,'bold'); pdf.text(`Gesamt: ${fmtDur(total)}`,15,yy); yy+=22;
   pdf.setFont(undefined,'normal'); pdf.line(15,yy,80,yy); pdf.line(115,yy,180,yy); yy+=5;
   pdf.setFontSize(9); pdf.text('Datum, Unterschrift Mitarbeiter',15,yy); pdf.text('Datum, Unterschrift Arbeitgeber',115,yy);
-  pdf.save(`Arbeitsnachweis_${y}-${m}.pdf`);
+  pdf.save(`Arbeitsnachweis_${eff === 'all' ? 'alle' : 'Block'+eff}.pdf`);
 };
 </script>
 </body>
