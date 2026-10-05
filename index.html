@@ -1,122 +1,157 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b1f24">
-<title>AC Performance – Arbeitsnachweis</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07161a">
+<title>AC-Performance · Worklog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b1f24;--surface:#10292f;--surface2:#163640;--border:#24505b;--text:#e8f1f2;--muted:#8fb0b6;--accent:#3fc1c9;--accent-text:#06262b;--danger:#e0707a;--ok:#6fcf97}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;line-height:1.5;padding-bottom:env(safe-area-inset-bottom)}
-main{max-width:640px;margin:0 auto;padding:16px}
-header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 16px}
-h1{font-size:1.25rem}h1 span{color:var(--accent)}
-h2{font-size:1rem;margin-bottom:12px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
-label{display:block;font-size:.8rem;color:var(--muted);margin:10px 0 4px}
-input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:16px}
-textarea{min-height:80px;resize:vertical}
-button{font-size:1rem;border-radius:12px;padding:14px 16px;min-height:48px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-weight:600;cursor:pointer}
-button:active{transform:scale(.98)}
-button.primary{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
-button.danger{color:var(--danger)}
-button:disabled{opacity:.4}
-.row{display:flex;gap:10px}.row>*{flex:1}
-.big{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.big button{min-height:64px;font-size:1.1rem}
-.status{font-size:.9rem;color:var(--muted)}
-.status b{color:var(--ok)}
-.bar{height:12px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:10px 0 6px}
-.bar div{height:100%;background:var(--accent);width:0;transition:width .4s}
-.bar div.over{background:var(--ok)}
-.hint{font-size:.85rem;color:var(--muted)}
-.entry{border-top:1px solid var(--border);padding:12px 0}
-.entry:first-of-type{border-top:0}
-.entry .top{display:flex;justify-content:space-between;gap:8px;font-weight:600}
-.entry .meta{font-size:.85rem;color:var(--muted)}
-.entry .txt{margin:4px 0;white-space:pre-wrap}
-.entry .acts{display:flex;gap:8px;margin-top:6px}
-.entry .acts button{min-height:40px;padding:8px 12px;font-size:.85rem}
-.tag{display:inline-block;font-size:.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:2px 10px;color:var(--accent)}
-.err{color:var(--danger);font-size:.9rem;margin-top:8px;min-height:1.2em}
-dialog{margin:auto;width:min(94vw,520px);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:18px}
-dialog::backdrop{background:#000a}
+:root{--petrol:#33aeac;--petrolLight:#67d7d1;--bg:#07161a;--bg2:#0c2226;--card:rgba(255,255,255,.055);--card2:rgba(255,255,255,.035);--border:rgba(255,255,255,.105);--text:#f4fbfa;--muted:#a6c1bf;--faint:#6d8987;--red:#ff807a;--ease:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box} html{background:var(--bg)} body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 0%,rgba(51,174,172,.23),transparent 34rem),radial-gradient(circle at 97% 70%,rgba(51,174,172,.14),transparent 34rem),linear-gradient(150deg,#061519 0%,#0a1d21 50%,#071519 100%);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect filter='url(%23n)' width='100%25' height='100%25' opacity='.8'/%3E%3C/svg%3E")}
+button,input,textarea,select{font:inherit} button{cursor:pointer;border:0} .app{max-width:580px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top,20px) 18px calc(100px + env(safe-area-inset-bottom,20px));position:relative}
 .hidden{display:none!important}
-.link{background:none;border:0;color:var(--accent);min-height:auto;padding:8px 0;font-weight:500}
+.header{display:flex;align-items:center;justify-content:space-between;padding:24px 2px 20px}.brand{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;font-style:italic;letter-spacing:.4px;line-height:.8}.brand small{font:600 9px Inter,sans-serif;letter-spacing:2.1px;color:var(--petrolLight);display:block;margin-top:9px;font-style:normal}.profile{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--petrol),#187a7b);display:grid;place-items:center;color:#062023;font-weight:800;font-size:13px;box-shadow:0 8px 24px rgba(51,174,172,.23);text-transform:uppercase}
+.view{display:none;animation:enter .4s var(--ease)}.view.active{display:block}@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}.eyebrow{color:var(--petrolLight);font-size:10px;letter-spacing:1.8px;font-weight:700;text-transform:uppercase}.welcome{margin:8px 0 4px;font:800 33px/1 'Barlow Condensed',sans-serif;letter-spacing:.2px}.date{color:var(--muted);font-size:13px}
+.status-card{margin-top:24px;position:relative;overflow:hidden;border:1px solid var(--border);border-radius:24px;padding:26px;background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.025));box-shadow:0 18px 50px rgba(0,0,0,.16)}.status-card:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-95px;top:-95px;background:radial-gradient(circle,rgba(51,174,172,.28),transparent 65%)}.status-row{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center}.live{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--faint)}.dot.on{background:var(--petrol);box-shadow:0 0 0 5px rgba(51,174,172,.14);animation:pulse 1.8s infinite}@keyframes pulse{50%{box-shadow:0 0 0 9px rgba(51,174,172,0)}}.timer{position:relative;z-index:1;margin:22px 0 5px;font:900 clamp(54px,15vw,78px)/.9 'Barlow Condensed',sans-serif;letter-spacing:1px}.since{position:relative;z-index:1;color:var(--muted);font-size:12px}
+.primary{width:100%;margin-top:14px;border-radius:17px;padding:19px 18px;background:var(--petrol);color:#062124;font:800 21px 'Barlow Condensed',sans-serif;letter-spacing:.8px;box-shadow:0 12px 25px rgba(51,174,172,.22);transition:.2s var(--ease)}.primary:active{transform:scale(.98)}.primary.end{background:#eefaf8;color:#082023}.primary:disabled{opacity:.35;box-shadow:none}.secondary{margin-top:12px;width:100%;border:1px solid var(--border);background:var(--card2);color:var(--text);border-radius:15px;padding:14px;font-size:13px;font-weight:600}
+.big{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:30px 2px 13px}.section-title h2{margin:0;font:800 23px 'Barlow Condensed',sans-serif;letter-spacing:.2px}.section-title button{background:none;color:var(--petrolLight);font-size:12px;font-weight:700;padding:5px 0}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}.summary-card{background:var(--card2);border:1px solid var(--border);border-radius:17px;padding:16px}.summary-card span{display:block;color:var(--muted);font-size:11px}.summary-card strong{display:block;font:800 28px 'Barlow Condensed',sans-serif;margin-top:5px}.summary-card em{font-style:normal;color:var(--petrolLight);font-size:11px}
+.timeline{border:1px solid var(--border);background:var(--card2);border-radius:19px;overflow:hidden}.form-card{border:1px solid var(--border);background:var(--card2);border-radius:19px;padding:6px 16px 16px;margin-top:14px}
+.edit{background:none;color:var(--petrolLight);font-size:11px;font-weight:700;margin-top:5px;padding:0}.edit.del{color:var(--red)}
+.list-head{padding:18px 0 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}.list-head h1{margin:0;font:800 33px 'Barlow Condensed',sans-serif}.filter{border:1px solid var(--border);color:var(--text);background:var(--card2);border-radius:11px;padding:8px 10px;font-size:12px;width:auto}
+.history-card{border:1px solid var(--border);border-radius:17px;background:var(--card2);padding:15px;margin-bottom:9px}.history-top{display:flex;justify-content:space-between;gap:12px}.history-top strong{font-size:13px}.duration{font:800 21px 'Barlow Condensed',sans-serif;color:var(--petrolLight)}.history-card p{font-size:12px;color:var(--muted);margin:6px 0 11px;line-height:1.45;white-space:pre-wrap}.chips{display:flex;gap:12px;align-items:center}.chip{font-size:10px;padding:5px 8px;border-radius:20px;background:rgba(51,174,172,.12);color:var(--petrolLight)}.chips .edit{margin:0}.chips .edit:first-of-type{margin-left:auto}
+.empty{color:var(--muted);font-size:12px;padding:18px;text-align:center}
+.report-card{border-radius:21px;padding:21px;border:1px solid var(--border);background:linear-gradient(145deg,rgba(51,174,172,.18),rgba(255,255,255,.035))}.report-card h2{font:800 27px 'Barlow Condensed',sans-serif;margin:8px 0}.report-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.bar-row{display:grid;grid-template-columns:96px 1fr 48px;gap:8px;align-items:center;font-size:11px;color:var(--muted);margin:15px 0}.bar{height:7px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--petrol),var(--petrolLight))}.bar-row b{font-size:11px;color:var(--text);text-align:right}
+.bottom-nav{position:fixed;z-index:5;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(544px,calc(100% - 36px));padding:8px;background:rgba(10,31,35,.88);border:1px solid var(--border);border-radius:19px;display:grid;grid-template-columns:repeat(3,1fr);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 13px 35px rgba(0,0,0,.26)}.nav-btn{padding:10px 5px;background:transparent;color:var(--faint);font-size:10px;font-weight:700;display:grid;gap:5px;place-items:center}.nav-btn svg{width:19px;height:19px}.nav-btn.active{color:var(--petrolLight)}
+.label{font-size:11px;font-weight:700;color:var(--muted);display:block;margin:17px 0 8px}
+textarea,input[type=text],input[type=email],input[type=password],input[type=month],input[type=datetime-local],select{width:100%;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.045);color:var(--text);padding:13px;font-size:16px;outline:none;font-family:inherit}select option{background:#10282c;color:var(--text)}textarea{height:105px;resize:none;line-height:1.45}
+.voice{width:100%;border:1px dashed rgba(103,215,209,.45);background:rgba(51,174,172,.08);color:var(--petrolLight);border-radius:14px;margin-top:9px;padding:12px;font-size:12px;font-weight:700}
+.err{color:var(--red);font-size:12px;margin-top:10px;min-height:1.2em}
+.linkbtn{background:none;color:var(--petrolLight);font-size:12px;font-weight:700;padding:10px 0;display:block}
+dialog{border:0;padding:0;background:transparent;color:var(--text);max-width:100%;width:min(580px,100%);margin:auto auto 0}dialog::backdrop{background:rgba(0,11,14,.68);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.sheet{max-height:92vh;overflow:auto;border-radius:27px 27px 0 0;background:#10282c;border:1px solid var(--border);padding:13px 18px calc(28px + env(safe-area-inset-bottom));animation:sheet .35s var(--ease)}@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}.handle{width:39px;height:4px;border-radius:4px;background:rgba(255,255,255,.25);margin:0 auto 21px}.sheet h2{font:800 29px 'Barlow Condensed',sans-serif;margin:0}.sheet .sub{color:var(--muted);font-size:12px;line-height:1.45;margin:7px 0 6px}
+.cycle-card{margin-top:12px;border:1px solid rgba(103,215,209,.34);border-radius:20px;padding:18px;background:linear-gradient(135deg,rgba(51,174,172,.18),rgba(255,255,255,.035));box-shadow:0 12px 30px rgba(0,0,0,.11)}.cycle-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.cycle-top h3{font:800 22px 'Barlow Condensed',sans-serif;margin:5px 0 0}.cycle-status{background:rgba(51,174,172,.17);color:var(--petrolLight);font-size:11px;font-weight:800;border-radius:20px;padding:7px 10px}.cycle-numbers{display:flex;align-items:baseline;gap:7px;margin-top:17px}.cycle-numbers strong{font:900 39px 'Barlow Condensed',sans-serif;letter-spacing:.3px}.cycle-numbers span{color:var(--muted);font-size:12px}.progress-track{height:9px;background:rgba(255,255,255,.11);border-radius:9px;margin-top:12px;overflow:hidden}.progress-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--petrol),var(--petrolLight));border-radius:inherit;transition:width .5s var(--ease)}.cycle-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:11px;color:var(--muted);font-size:11px}.cycle-complete{border-color:#f2fbf9;background:linear-gradient(135deg,rgba(51,174,172,.37),rgba(255,255,255,.11))}.cycle-complete .progress-track i{background:#eefcf9}
+@media(min-width:620px){.app{padding-left:24px;padding-right:24px}.header{padding-top:28px}}
 </style>
 </head>
 <body>
-<main>
-  <header>
-    <h1>AC <span>Performance</span> · Arbeitsnachweis</h1>
-    <button id="logout" class="link hidden">Abmelden</button>
-  </header>
 
-  <section id="authView" class="card hidden">
-    <h2 id="authTitle">Anmelden</h2>
-    <label for="email">E-Mail</label>
-    <input id="email" type="email" autocomplete="email">
-    <label for="pw">Passwort (mind. 6 Zeichen)</label>
-    <input id="pw" type="password" autocomplete="current-password">
-    <div class="row" style="margin-top:14px">
+<div class="app">
+<header class="header">
+  <div class="brand">AC-PERFORMANCE<small>WORKLOG · ZEITERFASSUNG</small></div>
+  <div class="profile hidden" id="profile" title="Abmelden" role="button">TS</div>
+</header>
+
+<main>
+  <section id="authView" class="hidden">
+    <div class="eyebrow">Willkommen</div>
+    <h1 class="welcome" id="authTitle">Anmelden</h1>
+    <div class="form-card">
+      <label class="label" for="email">E-Mail</label>
+      <input id="email" type="email" autocomplete="email">
+      <label class="label" for="pw">Passwort (mind. 6 Zeichen)</label>
+      <input id="pw" type="password" autocomplete="current-password">
       <button id="authBtn" class="primary">Anmelden</button>
+      <button id="authSwitch" class="linkbtn">Noch kein Konto? Registrieren</button>
+      <button id="resetBtn" class="linkbtn">Passwort vergessen?</button>
+      <div id="authErr" class="err"></div>
     </div>
-    <button id="authSwitch" class="link">Noch kein Konto? Registrieren</button>
-    <button id="resetBtn" class="link">Passwort vergessen?</button>
-    <div id="authErr" class="err"></div>
   </section>
 
   <div id="appView" class="hidden">
-    <section class="card">
-      <h2>Woche</h2>
-      <div class="bar"><div id="bar"></div></div>
-      <div id="weekText" class="hint"></div>
-    </section>
 
-    <section class="card">
-      <h2>Stempeln</h2>
-      <div id="status" class="status">Nicht eingestempelt</div>
-      <label for="cat">Tätigkeit</label>
-      <select id="cat"></select>
-      <label for="txt">Beschreibung</label>
-      <textarea id="txt" placeholder="Was hast du gemacht?"></textarea>
-      <div class="row" style="margin-top:10px">
-        <button id="dictate" type="button">🎤 Diktieren</button>
+    <section id="today" class="view active">
+      <div class="eyebrow" id="todayDate"></div>
+      <h1 class="welcome" id="greeting">Hallo.</h1>
+      <div class="date">Behalte deine Arbeitszeit einfach im Blick.</div>
+
+      <div class="status-card">
+        <div class="status-row">
+          <div class="live"><i class="dot" id="dot"></i><span id="status">NICHT EINGESTEMPELT</span></div>
+          <span style="color:var(--petrolLight);font-size:11px;font-weight:700">HEUTE</span>
+        </div>
+        <div class="timer" id="timer">00:00:00</div>
+        <div class="since" id="since">Starte deine Arbeitszeit mit „Kommen“.</div>
       </div>
-      <div class="big">
-        <button id="inBtn" class="primary">Kommen</button>
-        <button id="outBtn" disabled>Gehen</button>
+
+      <div class="form-card">
+        <label class="label" for="cat">Tätigkeitsbereich</label>
+        <select id="cat"></select>
+        <label class="label" for="txt">Was machst du gerade?</label>
+        <textarea id="txt" placeholder="Tätigkeit kurz beschreiben …"></textarea>
+        <button id="dictate" type="button" class="voice">🎙 DIKTIEREN</button>
+      </div>
+
+      <div class="big" style="margin-top:2px">
+        <button id="inBtn" class="primary">KOMMEN</button>
+        <button id="outBtn" class="primary end" disabled>GEHEN</button>
       </div>
       <div id="msg" class="err"></div>
-    </section>
 
-    <section class="card">
-      <div class="row">
-        <button id="addBtn">+ Zeit nachtragen</button>
-        <button id="pdfBtn">PDF Export</button>
+      <div class="summary" style="margin-top:22px">
+        <div class="summary-card"><span>Heute</span><strong id="todayTotal">0:00 h</strong><em id="todayCount">0 Buchungen</em></div>
+        <div class="summary-card"><span>Diese Woche</span><strong id="weekTotal">0:00 h</strong><em>seit Montag</em></div>
       </div>
-      <label for="month">Monat</label>
-      <input id="month" type="month">
+
+      <div class="cycle-card" id="weekCard">
+        <div class="cycle-top"><div><div class="eyebrow">Wochenziel</div><h3 id="weekTitle">Wochenstunden</h3></div><span class="cycle-status" id="weekPct">0 %</span></div>
+        <div class="cycle-numbers"><strong id="weekBig">0:00 h</strong><span id="weekOf"></span></div>
+        <div class="progress-track"><i id="bar"></i></div>
+        <div class="cycle-bottom"><span id="weekText"></span></div>
+      </div>
+
+      <div class="section-title"><h2>Heute</h2><button onclick="showView('history')">Alle Buchungen</button></div>
+      <div id="todayList"></div>
     </section>
 
-    <section class="card">
-      <h2 id="listTitle">Einträge</h2>
-      <div id="list"></div>
+    <section id="history" class="view">
+      <div class="list-head"><h1>Meine Zeiten</h1><input id="month" type="month" class="filter"></div>
+      <div class="summary">
+        <div class="summary-card"><span>Monat bisher</span><strong id="monthTotal">0:00 h</strong><em id="monthDays">0 Arbeitstage</em></div>
+        <div class="summary-card"><span>Ø pro Arbeitstag</span><strong id="monthAvg">0:00 h</strong><em>Erfasste Zeit</em></div>
+      </div>
+      <div id="list" style="margin-top:20px"></div>
+      <button id="addBtn" class="primary">＋ ZEIT NACHTRAGEN</button>
+    </section>
+
+    <section id="reports" class="view">
+      <div class="list-head"><h1>Auswertung</h1></div>
+      <div class="report-card"><div class="eyebrow">Arbeitszeitübersicht</div><h2 id="repTotal">0 Std. 00 Min.</h2><p id="repSub">Erfasste Arbeitszeit</p></div>
+      <div class="section-title"><h2>Nach Tätigkeitsbereich</h2></div>
+      <div class="timeline" style="padding:7px 16px" id="catBars"></div>
+      <div class="section-title"><h2>Export</h2></div>
+      <div class="timeline" style="padding:16px">
+        <strong style="font-size:13px">Arbeitsnachweis als PDF</strong>
+        <p style="color:var(--muted);font-size:11px;line-height:1.45;margin:5px 0 13px">Für den im Reiter „Zeiten“ gewählten Monat, mit Unterschriftszeilen und Monatssumme.</p>
+        <button id="pdfBtn" class="primary" style="margin:0;padding:14px">PDF EXPORTIEREN</button>
+      </div>
     </section>
   </div>
 </main>
+</div>
+
+<nav class="bottom-nav hidden" id="bottomNav">
+  <button class="nav-btn active" data-view="today" onclick="showView('today')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5v8a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Heute</button>
+  <button class="nav-btn" data-view="history" onclick="showView('history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18v16H3z"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>Zeiten</button>
+  <button class="nav-btn" data-view="reports" onclick="showView('reports')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5m0 14h16"/><path d="M8 16v-5m4 5V7m4 9v-3"/></svg>Auswertung</button>
+</nav>
 
 <dialog id="dlg">
-  <h2 id="dlgTitle">Eintrag</h2>
-  <label for="dStart">Beginn</label><input id="dStart" type="datetime-local">
-  <label for="dEnd">Ende</label><input id="dEnd" type="datetime-local">
-  <label for="dCat">Tätigkeit</label><select id="dCat"></select>
-  <label for="dTxt">Beschreibung</label><textarea id="dTxt"></textarea>
-  <div id="dErr" class="err"></div>
-  <div class="row" style="margin-top:10px">
-    <button id="dCancel">Abbrechen</button>
-    <button id="dSave" class="primary">Speichern</button>
+  <div class="sheet">
+    <div class="handle"></div>
+    <h2 id="dlgTitle">Eintrag</h2>
+    <p class="sub">Beginn, Ende, Tätigkeitsbereich und Beschreibung kannst du jederzeit anpassen.</p>
+    <label class="label" for="dStart">Beginn</label><input id="dStart" type="datetime-local">
+    <label class="label" for="dEnd">Ende</label><input id="dEnd" type="datetime-local">
+    <label class="label" for="dCat">Tätigkeitsbereich</label><select id="dCat"></select>
+    <label class="label" for="dTxt">Beschreibung</label><textarea id="dTxt"></textarea>
+    <div id="dErr" class="err"></div>
+    <button id="dSave" class="primary">SPEICHERN</button>
+    <button id="dCancel" class="secondary">ABBRECHEN</button>
   </div>
 </dialog>
 
@@ -131,13 +166,20 @@ const $ = id => document.getElementById(id);
 const CATS = ['Training','Beratung','Verwaltung','Organisation','Fahrt','Sonstiges'];
 ['cat','dCat'].forEach(id => $(id).innerHTML = CATS.map(c => `<option>${c}</option>`).join(''));
 
+window.showView = id => {
+  document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+  $(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.toggle('active', x.dataset.view === id));
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
 let app, auth, db;
 try {
   if (firebaseConfig.apiKey.startsWith('DEIN')) throw new Error('config');
   app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
 } catch (e) {
   $('authView').classList.remove('hidden');
-  $('authView').innerHTML = '<h2>Einrichtung fehlt</h2><p class="hint">Bitte in der Datei <b>firebase-config.js</b> deine Firebase-Zugangsdaten eintragen (siehe README).</p>';
+  $('authView').innerHTML = '<h1 class="welcome">Einrichtung fehlt</h1><p class="date">Bitte in der Datei <b>firebase-config.js</b> deine Firebase-Zugangsdaten eintragen (siehe README).</p>';
   throw e;
 }
 
@@ -148,10 +190,12 @@ const toLocal = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad
 const fmtDate = ms => new Date(ms).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
 const fmtTime = ms => new Date(ms).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
 const fmtDur = ms => { const m = Math.max(0,Math.round(ms/60000)); return `${Math.floor(m/60)}:${pad(m%60)} h`; };
+const fmtClock = ms => { const s = Math.max(0,Math.floor(ms/1000)); return `${pad(Math.floor(s/3600))}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`; };
 const esc = s => String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const dur = e => (e.end ?? Date.now()) - e.start;
 
 function mondayStart(){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d.getTime(); }
+function dayStart(){ const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
 
 /* Auth */
 function setMode(m){
@@ -175,7 +219,7 @@ $('resetBtn').onclick = async () => {
   if(!e){ $('authErr').textContent='Bitte erst E-Mail eintragen.'; return; }
   try { await sendPasswordResetEmail(auth,e); $('authErr').textContent='Reset-Mail wurde gesendet.'; } catch(err){ $('authErr').textContent = authMsg(err.code); }
 };
-$('logout').onclick = () => signOut(auth);
+$('profile').onclick = () => { if (confirm('Abmelden?')) signOut(auth); };
 function authMsg(c){
   return ({'auth/invalid-credential':'E-Mail oder Passwort falsch.','auth/invalid-email':'Ungültige E-Mail.','auth/email-already-in-use':'E-Mail ist schon registriert.','auth/weak-password':'Passwort zu kurz (mind. 6 Zeichen).','auth/missing-password':'Bitte Passwort eingeben.','auth/operation-not-allowed':'E-Mail/Passwort-Login ist in Firebase nicht aktiviert.'})[c] || 'Fehler: '+c;
 }
@@ -185,8 +229,10 @@ onAuthStateChanged(auth, u => {
   if (unsub) { unsub(); unsub = null; }
   $('authView').classList.toggle('hidden', !!u);
   $('appView').classList.toggle('hidden', !u);
-  $('logout').classList.toggle('hidden', !u);
+  $('bottomNav').classList.toggle('hidden', !u);
+  $('profile').classList.toggle('hidden', !u);
   if (u) {
+    $('profile').textContent = (u.email||'?').slice(0,2);
     $('month').value = new Date().toISOString().slice(0,7);
     const q = query(collection(db,'users',u.uid,'entries'), orderBy('start','desc'));
     unsub = onSnapshot(q, snap => {
@@ -219,17 +265,17 @@ let rec = null;
 $('dictate').onclick = () => {
   if (rec) { rec.stop(); return; }
   rec = new SR(); rec.lang='de-DE'; rec.interimResults=false;
-  $('dictate').textContent='⏹ Stopp';
+  $('dictate').textContent='● HÖRT ZU … (ANTIPPEN ZUM STOPPEN)';
   rec.onresult = ev => { const t = ev.results[0][0].transcript; $('txt').value = ($('txt').value ? $('txt').value+' ' : '') + t; };
-  rec.onend = () => { rec=null; $('dictate').textContent='🎤 Diktieren'; };
-  rec.onerror = () => { rec=null; $('dictate').textContent='🎤 Diktieren'; };
+  rec.onend = () => { rec=null; $('dictate').textContent='🎙 DIKTIEREN'; };
+  rec.onerror = () => { rec=null; $('dictate').textContent='🎙 DIKTIEREN'; };
   rec.start();
 };
 
 /* Dialog nachtragen / korrigieren */
 function openDlg(e){
   editId = e ? e.id : null;
-  $('dlgTitle').textContent = e ? 'Eintrag korrigieren' : 'Zeit nachtragen';
+  $('dlgTitle').textContent = e ? 'Buchung korrigieren' : 'Zeit nachtragen';
   const now = Date.now();
   $('dStart').value = toLocal(e ? e.start : now - 3600000);
   $('dEnd').value = toLocal(e ? (e.end ?? now) : now);
@@ -240,6 +286,7 @@ function openDlg(e){
 }
 $('addBtn').onclick = () => openDlg(null);
 $('dCancel').onclick = () => $('dlg').close();
+$('dlg').addEventListener('click', ev => { if (ev.target === $('dlg')) $('dlg').close(); });
 $('dSave').onclick = async () => {
   const s = new Date($('dStart').value).getTime(), en = new Date($('dEnd').value).getTime();
   if (isNaN(s) || isNaN(en)) { $('dErr').textContent='Bitte Beginn und Ende angeben.'; return; }
@@ -258,39 +305,83 @@ function monthEntries(){
   const a = new Date(y,m-1,1).getTime(), b = new Date(y,m,1).getTime();
   return entries.filter(e => e.start>=a && e.start<b);
 }
+function cardHTML(e){
+  return `<div class="history-card">
+    <div class="history-top"><strong>${esc(e.category)}</strong><span class="duration">${fmtDur(dur(e)).replace(' h','')}</span></div>
+    <p>${fmtTime(e.start)}–${e.end?fmtTime(e.end):'läuft'} Uhr${e.text?' · '+esc(e.text):''}</p>
+    <div class="chips"><span class="chip">${e.end?'Abgeschlossen':'Aktiv'}</span><button class="edit" data-edit="${e.id}">Korrigieren</button><button class="edit del" data-del="${e.id}">Löschen</button></div>
+  </div>`;
+}
+function tick(){
+  const r = running();
+  $('timer').textContent = r ? fmtClock(Date.now()-r.start) : '00:00:00';
+}
 function render(){
   const r = running();
   $('inBtn').disabled = !!r; $('outBtn').disabled = !r;
-  $('status').innerHTML = r ? `<b>Eingestempelt</b> seit ${fmtTime(r.start)} Uhr · ${fmtDur(Date.now()-r.start)}` : 'Nicht eingestempelt';
+  $('dot').classList.toggle('on', !!r);
+  $('status').textContent = r ? 'AKTIV · ARBEITSZEIT LÄUFT' : 'NICHT EINGESTEMPELT';
+  $('since').textContent = r ? `Gestartet um ${fmtTime(r.start)} Uhr` : 'Starte deine Arbeitszeit mit „Kommen“.';
   if (r && !$('txt').value) { $('txt').value = r.text||''; $('cat').value = r.category; }
+  tick();
+
+  const h = new Date().getHours();
+  $('greeting').textContent = h<11 ? 'Guten Morgen.' : h<18 ? 'Guten Tag.' : 'Guten Abend.';
+  $('todayDate').textContent = new Date().toLocaleDateString('de-DE',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+  const ds = dayStart();
+  const todayList = entries.filter(e => e.start>=ds);
+  $('todayTotal').textContent = fmtDur(todayList.reduce((s,e)=>s+dur(e),0));
+  $('todayCount').textContent = `${todayList.length} Buchung${todayList.length===1?'':'en'}`;
+  $('todayList').innerHTML = todayList.length ? todayList.map(cardHTML).join('') : '<div class="timeline"><div class="empty">Heute noch keine Buchung.</div></div>';
 
   const ws = mondayStart();
   const total = entries.filter(e => e.start>=ws).reduce((s,e)=>s+dur(e),0);
   const goal = WEEKLY_HOURS*3600000;
   const pct = Math.min(100,total/goal*100);
   $('bar').style.width = pct+'%';
-  $('bar').classList.toggle('over', total>=goal);
+  $('weekCard').classList.toggle('cycle-complete', total>=goal);
+  $('weekTotal').textContent = fmtDur(total);
+  $('weekBig').textContent = fmtDur(total);
+  $('weekOf').textContent = `von ${WEEKLY_HOURS}:00 h`;
+  $('weekPct').textContent = Math.round(pct)+' %';
+  $('weekTitle').textContent = `${WEEKLY_HOURS}-Stunden-Ziel`;
   const rest = goal-total;
-  $('weekText').textContent = rest>0 ? `${fmtDur(total)} von ${WEEKLY_HOURS}:00 h · noch ${fmtDur(rest)}` : `${fmtDur(total)} von ${WEEKLY_HOURS}:00 h · Ziel erreicht${rest<0?' (+'+fmtDur(-rest)+')':''}`;
+  $('weekText').textContent = rest>0 ? `Noch ${fmtDur(rest)} bis zum Ziel` : `Ziel erreicht${rest<0?' (+'+fmtDur(-rest)+')':''}`;
 
   const list = monthEntries();
   const mTotal = list.reduce((s,e)=>s+dur(e),0);
-  $('listTitle').textContent = `Einträge · ${fmtDur(mTotal)}`;
-  $('list').innerHTML = list.length ? list.map(e => `
-    <div class="entry">
-      <div class="top"><span>${fmtDate(e.start)}</span><span>${fmtDur(dur(e))}</span></div>
-      <div class="meta">${fmtTime(e.start)} – ${e.end?fmtTime(e.end):'läuft'} Uhr · <span class="tag">${esc(e.category)}</span></div>
-      <div class="txt">${esc(e.text)}</div>
-      <div class="acts"><button data-edit="${e.id}">Korrigieren</button><button class="danger" data-del="${e.id}">Löschen</button></div>
-    </div>`).join('') : '<p class="hint">Keine Einträge in diesem Monat.</p>';
+  const days = new Set(list.map(e => new Date(e.start).toDateString())).size;
+  $('monthTotal').textContent = fmtDur(mTotal);
+  $('monthDays').textContent = `${days} Arbeitstag${days===1?'':'e'}`;
+  $('monthAvg').textContent = days ? fmtDur(mTotal/days) : '0:00 h';
+
+  const groups = {};
+  list.forEach(e => { const k = new Date(e.start).toDateString(); (groups[k] = groups[k] || []).push(e); });
+  $('list').innerHTML = list.length ? Object.values(groups).map(g => {
+    const sum = g.reduce((s,e)=>s+dur(e),0);
+    return `<div style="margin-top:18px"><p style="font-size:12px;font-weight:700;margin:0 2px 9px;color:var(--muted)">${fmtDate(g[0].start)} <span style="float:right;color:var(--petrolLight);font-size:11px">${fmtDur(sum)}</span></p>${g.map(cardHTML).join('')}</div>`;
+  }).join('') : '<div class="timeline"><div class="empty">Keine Einträge in diesem Monat.</div></div>';
+
+  const mins = Math.round(mTotal/60000);
+  $('repTotal').textContent = `${Math.floor(mins/60)} Std. ${pad(mins%60)} Min.`;
+  $('repSub').textContent = `Erfasste Arbeitszeit · ${days} Arbeitstag${days===1?'':'e'}`;
+  const byCat = {};
+  list.forEach(e => byCat[e.category] = (byCat[e.category]||0) + dur(e));
+  const rows = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  const max = rows.length ? rows[0][1] : 1;
+  $('catBars').innerHTML = rows.length ? rows.map(([c,v]) => `<div class="bar-row"><span>${esc(c)}</span><div class="bar"><i style="width:${Math.round(v/max*100)}%"></i></div><b>${fmtDur(v).replace(' h','')}</b></div>`).join('') : '<div class="empty">Keine Daten.</div>';
 }
 $('month').onchange = render;
+setInterval(() => { if (user) tick(); }, 1000);
 setInterval(() => { if (user) render(); }, 30000);
-$('list').onclick = async ev => {
+const onListClick = async ev => {
   const ed = ev.target.dataset.edit, de = ev.target.dataset.del;
   if (ed) openDlg(entries.find(e => e.id===ed));
   if (de && confirm('Eintrag wirklich löschen?')) await deleteDoc(doc(db,'users',user.uid,'entries',de));
 };
+$('list').onclick = onListClick;
+$('todayList').onclick = onListClick;
 
 /* PDF */
 $('pdfBtn').onclick = () => {
