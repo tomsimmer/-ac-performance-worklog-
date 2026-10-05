@@ -1,16 +1,325 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#062a2b" />
-    <title>AC-Performance Worklog</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script type="module" src="/src/main.jsx"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1f24">
+<title>AC Performance – Arbeitsnachweis</title>
+<style>
+:root{--bg:#0b1f24;--surface:#10292f;--surface2:#163640;--border:#24505b;--text:#e8f1f2;--muted:#8fb0b6;--accent:#3fc1c9;--accent-text:#06262b;--danger:#e0707a;--ok:#6fcf97}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;line-height:1.5;padding-bottom:env(safe-area-inset-bottom)}
+main{max-width:640px;margin:0 auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 16px}
+h1{font-size:1.25rem}h1 span{color:var(--accent)}
+h2{font-size:1rem;margin-bottom:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+label{display:block;font-size:.8rem;color:var(--muted);margin:10px 0 4px}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-size:16px}
+textarea{min-height:80px;resize:vertical}
+button{font-size:1rem;border-radius:12px;padding:14px 16px;min-height:48px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-weight:600;cursor:pointer}
+button:active{transform:scale(.98)}
+button.primary{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
+button.danger{color:var(--danger)}
+button:disabled{opacity:.4}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.big{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.big button{min-height:64px;font-size:1.1rem}
+.status{font-size:.9rem;color:var(--muted)}
+.status b{color:var(--ok)}
+.bar{height:12px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.bar div{height:100%;background:var(--accent);width:0;transition:width .4s}
+.bar div.over{background:var(--ok)}
+.hint{font-size:.85rem;color:var(--muted)}
+.entry{border-top:1px solid var(--border);padding:12px 0}
+.entry:first-of-type{border-top:0}
+.entry .top{display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.entry .meta{font-size:.85rem;color:var(--muted)}
+.entry .txt{margin:4px 0;white-space:pre-wrap}
+.entry .acts{display:flex;gap:8px;margin-top:6px}
+.entry .acts button{min-height:40px;padding:8px 12px;font-size:.85rem}
+.tag{display:inline-block;font-size:.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:2px 10px;color:var(--accent)}
+.err{color:var(--danger);font-size:.9rem;margin-top:8px;min-height:1.2em}
+dialog{margin:auto;width:min(94vw,520px);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:18px}
+dialog::backdrop{background:#000a}
+.hidden{display:none!important}
+.link{background:none;border:0;color:var(--accent);min-height:auto;padding:8px 0;font-weight:500}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>AC <span>Performance</span> · Arbeitsnachweis</h1>
+    <button id="logout" class="link hidden">Abmelden</button>
+  </header>
+
+  <section id="authView" class="card hidden">
+    <h2 id="authTitle">Anmelden</h2>
+    <label for="email">E-Mail</label>
+    <input id="email" type="email" autocomplete="email">
+    <label for="pw">Passwort (mind. 6 Zeichen)</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <div class="row" style="margin-top:14px">
+      <button id="authBtn" class="primary">Anmelden</button>
+    </div>
+    <button id="authSwitch" class="link">Noch kein Konto? Registrieren</button>
+    <button id="resetBtn" class="link">Passwort vergessen?</button>
+    <div id="authErr" class="err"></div>
+  </section>
+
+  <div id="appView" class="hidden">
+    <section class="card">
+      <h2>Woche</h2>
+      <div class="bar"><div id="bar"></div></div>
+      <div id="weekText" class="hint"></div>
+    </section>
+
+    <section class="card">
+      <h2>Stempeln</h2>
+      <div id="status" class="status">Nicht eingestempelt</div>
+      <label for="cat">Tätigkeit</label>
+      <select id="cat"></select>
+      <label for="txt">Beschreibung</label>
+      <textarea id="txt" placeholder="Was hast du gemacht?"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button id="dictate" type="button">🎤 Diktieren</button>
+      </div>
+      <div class="big">
+        <button id="inBtn" class="primary">Kommen</button>
+        <button id="outBtn" disabled>Gehen</button>
+      </div>
+      <div id="msg" class="err"></div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <button id="addBtn">+ Zeit nachtragen</button>
+        <button id="pdfBtn">PDF Export</button>
+      </div>
+      <label for="month">Monat</label>
+      <input id="month" type="month">
+    </section>
+
+    <section class="card">
+      <h2 id="listTitle">Einträge</h2>
+      <div id="list"></div>
+    </section>
+  </div>
+</main>
+
+<dialog id="dlg">
+  <h2 id="dlgTitle">Eintrag</h2>
+  <label for="dStart">Beginn</label><input id="dStart" type="datetime-local">
+  <label for="dEnd">Ende</label><input id="dEnd" type="datetime-local">
+  <label for="dCat">Tätigkeit</label><select id="dCat"></select>
+  <label for="dTxt">Beschreibung</label><textarea id="dTxt"></textarea>
+  <div id="dErr" class="err"></div>
+  <div class="row" style="margin-top:10px">
+    <button id="dCancel">Abbrechen</button>
+    <button id="dSave" class="primary">Speichern</button>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script type="module">
+import { firebaseConfig, WEEKLY_HOURS } from './firebase-config.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const $ = id => document.getElementById(id);
+const CATS = ['Training','Beratung','Verwaltung','Organisation','Fahrt','Sonstiges'];
+['cat','dCat'].forEach(id => $(id).innerHTML = CATS.map(c => `<option>${c}</option>`).join(''));
+
+let app, auth, db;
+try {
+  if (firebaseConfig.apiKey.startsWith('DEIN')) throw new Error('config');
+  app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
+} catch (e) {
+  $('authView').classList.remove('hidden');
+  $('authView').innerHTML = '<h2>Einrichtung fehlt</h2><p class="hint">Bitte in der Datei <b>firebase-config.js</b> deine Firebase-Zugangsdaten eintragen (siehe README).</p>';
+  throw e;
+}
+
+let user = null, entries = [], unsub = null, mode = 'login', editId = null;
+
+const pad = n => String(n).padStart(2,'0');
+const toLocal = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const fmtDate = ms => new Date(ms).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
+const fmtTime = ms => new Date(ms).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+const fmtDur = ms => { const m = Math.max(0,Math.round(ms/60000)); return `${Math.floor(m/60)}:${pad(m%60)} h`; };
+const esc = s => String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dur = e => (e.end ?? Date.now()) - e.start;
+
+function mondayStart(){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d.getTime(); }
+
+/* Auth */
+function setMode(m){
+  mode = m;
+  $('authTitle').textContent = m==='login' ? 'Anmelden' : 'Registrieren';
+  $('authBtn').textContent = m==='login' ? 'Anmelden' : 'Konto anlegen';
+  $('authSwitch').textContent = m==='login' ? 'Noch kein Konto? Registrieren' : 'Schon ein Konto? Anmelden';
+  $('authErr').textContent = '';
+}
+$('authSwitch').onclick = () => setMode(mode==='login'?'register':'login');
+$('authBtn').onclick = async () => {
+  $('authErr').textContent = '';
+  try {
+    const e = $('email').value.trim(), p = $('pw').value;
+    if (mode==='login') await signInWithEmailAndPassword(auth,e,p);
+    else await createUserWithEmailAndPassword(auth,e,p);
+  } catch(err){ $('authErr').textContent = authMsg(err.code); }
+};
+$('resetBtn').onclick = async () => {
+  const e = $('email').value.trim();
+  if(!e){ $('authErr').textContent='Bitte erst E-Mail eintragen.'; return; }
+  try { await sendPasswordResetEmail(auth,e); $('authErr').textContent='Reset-Mail wurde gesendet.'; } catch(err){ $('authErr').textContent = authMsg(err.code); }
+};
+$('logout').onclick = () => signOut(auth);
+function authMsg(c){
+  return ({'auth/invalid-credential':'E-Mail oder Passwort falsch.','auth/invalid-email':'Ungültige E-Mail.','auth/email-already-in-use':'E-Mail ist schon registriert.','auth/weak-password':'Passwort zu kurz (mind. 6 Zeichen).','auth/missing-password':'Bitte Passwort eingeben.','auth/operation-not-allowed':'E-Mail/Passwort-Login ist in Firebase nicht aktiviert.'})[c] || 'Fehler: '+c;
+}
+
+onAuthStateChanged(auth, u => {
+  user = u;
+  if (unsub) { unsub(); unsub = null; }
+  $('authView').classList.toggle('hidden', !!u);
+  $('appView').classList.toggle('hidden', !u);
+  $('logout').classList.toggle('hidden', !u);
+  if (u) {
+    $('month').value = new Date().toISOString().slice(0,7);
+    const q = query(collection(db,'users',u.uid,'entries'), orderBy('start','desc'));
+    unsub = onSnapshot(q, snap => {
+      entries = snap.docs.map(d => ({id:d.id, ...d.data()}));
+      render();
+    }, err => { $('msg').textContent = 'Datenbankfehler: '+err.code; });
+  } else { entries = []; setMode('login'); }
+});
+
+/* Stempeln */
+const running = () => entries.find(e => e.end == null);
+$('inBtn').onclick = async () => {
+  if (running()) return;
+  $('msg').textContent='';
+  try { await addDoc(collection(db,'users',user.uid,'entries'), {start:Date.now(), end:null, category:$('cat').value, text:$('txt').value.trim(), createdAt:serverTimestamp()}); }
+  catch(e){ $('msg').textContent='Fehler: '+e.code; }
+};
+$('outBtn').onclick = async () => {
+  const r = running(); if(!r) return;
+  try {
+    await updateDoc(doc(db,'users',user.uid,'entries',r.id), {end:Date.now(), category:$('cat').value, text:$('txt').value.trim()});
+    $('txt').value='';
+  } catch(e){ $('msg').textContent='Fehler: '+e.code; }
+};
+
+/* Diktieren */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SR) $('dictate').classList.add('hidden');
+let rec = null;
+$('dictate').onclick = () => {
+  if (rec) { rec.stop(); return; }
+  rec = new SR(); rec.lang='de-DE'; rec.interimResults=false;
+  $('dictate').textContent='⏹ Stopp';
+  rec.onresult = ev => { const t = ev.results[0][0].transcript; $('txt').value = ($('txt').value ? $('txt').value+' ' : '') + t; };
+  rec.onend = () => { rec=null; $('dictate').textContent='🎤 Diktieren'; };
+  rec.onerror = () => { rec=null; $('dictate').textContent='🎤 Diktieren'; };
+  rec.start();
+};
+
+/* Dialog nachtragen / korrigieren */
+function openDlg(e){
+  editId = e ? e.id : null;
+  $('dlgTitle').textContent = e ? 'Eintrag korrigieren' : 'Zeit nachtragen';
+  const now = Date.now();
+  $('dStart').value = toLocal(e ? e.start : now - 3600000);
+  $('dEnd').value = toLocal(e ? (e.end ?? now) : now);
+  $('dCat').value = e ? e.category : CATS[0];
+  $('dTxt').value = e ? e.text : '';
+  $('dErr').textContent='';
+  $('dlg').showModal();
+}
+$('addBtn').onclick = () => openDlg(null);
+$('dCancel').onclick = () => $('dlg').close();
+$('dSave').onclick = async () => {
+  const s = new Date($('dStart').value).getTime(), en = new Date($('dEnd').value).getTime();
+  if (isNaN(s) || isNaN(en)) { $('dErr').textContent='Bitte Beginn und Ende angeben.'; return; }
+  if (en <= s) { $('dErr').textContent='Ende muss nach dem Beginn liegen.'; return; }
+  const data = {start:s, end:en, category:$('dCat').value, text:$('dTxt').value.trim()};
+  try {
+    if (editId) await updateDoc(doc(db,'users',user.uid,'entries',editId), data);
+    else await addDoc(collection(db,'users',user.uid,'entries'), {...data, createdAt:serverTimestamp()});
+    $('dlg').close();
+  } catch(e){ $('dErr').textContent='Fehler: '+e.code; }
+};
+
+/* Render */
+function monthEntries(){
+  const [y,m] = $('month').value.split('-').map(Number);
+  const a = new Date(y,m-1,1).getTime(), b = new Date(y,m,1).getTime();
+  return entries.filter(e => e.start>=a && e.start<b);
+}
+function render(){
+  const r = running();
+  $('inBtn').disabled = !!r; $('outBtn').disabled = !r;
+  $('status').innerHTML = r ? `<b>Eingestempelt</b> seit ${fmtTime(r.start)} Uhr · ${fmtDur(Date.now()-r.start)}` : 'Nicht eingestempelt';
+  if (r && !$('txt').value) { $('txt').value = r.text||''; $('cat').value = r.category; }
+
+  const ws = mondayStart();
+  const total = entries.filter(e => e.start>=ws).reduce((s,e)=>s+dur(e),0);
+  const goal = WEEKLY_HOURS*3600000;
+  const pct = Math.min(100,total/goal*100);
+  $('bar').style.width = pct+'%';
+  $('bar').classList.toggle('over', total>=goal);
+  const rest = goal-total;
+  $('weekText').textContent = rest>0 ? `${fmtDur(total)} von ${WEEKLY_HOURS}:00 h · noch ${fmtDur(rest)}` : `${fmtDur(total)} von ${WEEKLY_HOURS}:00 h · Ziel erreicht${rest<0?' (+'+fmtDur(-rest)+')':''}`;
+
+  const list = monthEntries();
+  const mTotal = list.reduce((s,e)=>s+dur(e),0);
+  $('listTitle').textContent = `Einträge · ${fmtDur(mTotal)}`;
+  $('list').innerHTML = list.length ? list.map(e => `
+    <div class="entry">
+      <div class="top"><span>${fmtDate(e.start)}</span><span>${fmtDur(dur(e))}</span></div>
+      <div class="meta">${fmtTime(e.start)} – ${e.end?fmtTime(e.end):'läuft'} Uhr · <span class="tag">${esc(e.category)}</span></div>
+      <div class="txt">${esc(e.text)}</div>
+      <div class="acts"><button data-edit="${e.id}">Korrigieren</button><button class="danger" data-del="${e.id}">Löschen</button></div>
+    </div>`).join('') : '<p class="hint">Keine Einträge in diesem Monat.</p>';
+}
+$('month').onchange = render;
+setInterval(() => { if (user) render(); }, 30000);
+$('list').onclick = async ev => {
+  const ed = ev.target.dataset.edit, de = ev.target.dataset.del;
+  if (ed) openDlg(entries.find(e => e.id===ed));
+  if (de && confirm('Eintrag wirklich löschen?')) await deleteDoc(doc(db,'users',user.uid,'entries',de));
+};
+
+/* PDF */
+$('pdfBtn').onclick = () => {
+  const list = monthEntries().filter(e=>e.end).sort((a,b)=>a.start-b.start);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({unit:'mm',format:'a4'});
+  const [y,m] = $('month').value.split('-');
+  let yy = 20;
+  pdf.setFontSize(16); pdf.text('Arbeitsnachweis – AC Performance', 15, yy); yy+=8;
+  pdf.setFontSize(11); pdf.text(`Monat: ${m}/${y}   ·   ${user.email}`, 15, yy); yy+=10;
+  pdf.setFont(undefined,'bold'); pdf.text('Datum',15,yy); pdf.text('Zeit',50,yy); pdf.text('Dauer',80,yy); pdf.text('Tätigkeit',100,yy); pdf.setFont(undefined,'normal'); yy+=2; pdf.line(15,yy,195,yy); yy+=6;
+  let total=0;
+  list.forEach(e => {
+    total += dur(e);
+    const lines = pdf.splitTextToSize(`${e.category}${e.text?': '+e.text:''}`, 95);
+    if (yy + lines.length*5 > 275) { pdf.addPage(); yy=20; }
+    pdf.text(new Date(e.start).toLocaleDateString('de-DE'),15,yy);
+    pdf.text(`${fmtTime(e.start)}-${fmtTime(e.end)}`,50,yy);
+    pdf.text(fmtDur(dur(e)),80,yy);
+    pdf.text(lines,100,yy);
+    yy += lines.length*5 + 2;
+  });
+  if (yy>262) { pdf.addPage(); yy=20; }
+  pdf.line(15,yy,195,yy); yy+=7;
+  pdf.setFont(undefined,'bold'); pdf.text(`Gesamt: ${fmtDur(total)}`,15,yy); yy+=22;
+  pdf.setFont(undefined,'normal'); pdf.line(15,yy,80,yy); pdf.line(115,yy,180,yy); yy+=5;
+  pdf.setFontSize(9); pdf.text('Datum, Unterschrift Mitarbeiter',15,yy); pdf.text('Datum, Unterschrift Arbeitgeber',115,yy);
+  pdf.save(`Arbeitsnachweis_${y}-${m}.pdf`);
+};
+</script>
+</body>
 </html>

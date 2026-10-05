@@ -1,27 +1,41 @@
-# AC-Performance Worklog
+# AC Performance – Arbeitsnachweis
 
-Mobile-first Web-App mit Supabase-Datenbank für geräteübergreifende Zeiterfassung.
+Web-App zur Zeiterfassung mit Login und Datenbank (Firebase). Läuft auf allen Geräten, Daten werden synchronisiert.
 
-## Enthalten
-- Magic-Link-Login
-- Kommen / Gehen
-- Nachtragen und Korrigieren
-- 22-Stunden-Abrechnungsintervalle
-- PDF-Export
-- Responsive Oberfläche für Handy und Desktop
+**Funktionen:** Kommen/Gehen, Tätigkeit + Beschreibung, Diktieren, Zeiten nachtragen, Einträge korrigieren/löschen, Wochenfortschritt (22 h), PDF-Export pro Monat.
 
-## Start lokal
-1. `npm install`
-2. `.env.example` nach `.env` kopieren
-3. Supabase-Werte eintragen
-4. `npm run dev`
+## Einrichtung (einmalig)
 
-## Deployment
-1. Neues privates GitHub-Repository anlegen
-2. Dateien hochladen
-3. Bei Vercel importieren
-4. Umgebungsvariablen setzen:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-5. In Supabase `supabase/schema.sql` ausführen
-6. Unter Authentication > URL Configuration die Vercel-URL eintragen
+### 1. Firebase-Projekt
+1. https://console.firebase.google.com > **Projekt hinzufügen**.
+2. **Build > Authentication > Los geht's > E-Mail/Passwort** aktivieren.
+3. **Build > Firestore Database > Datenbank erstellen** (Standort `eur3` / Europa, Produktionsmodus).
+4. Reiter **Regeln** öffnen, folgendes einfügen und **Veröffentlichen**:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/entries/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
+```
+
+5. **Projekteinstellungen (Zahnrad) > Allgemein > Deine Apps > Web (</>)** > App registrieren. Die angezeigte `firebaseConfig` kopieren.
+
+### 2. Konfiguration eintragen
+In diesem Repo die Datei `firebase-config.js` öffnen (Stift-Symbol auf GitHub) und die Werte ersetzen. Committen.
+
+### 3. Veröffentlichen mit GitHub Pages
+**Settings > Pages > Source: Deploy from a branch > Branch `main` / `/ (root)` > Save.**
+Nach ca. 1 Minute ist die App unter `https://tomsimmer.github.io/-ac-performance-worklog-/` erreichbar.
+
+### 4. Domain freigeben
+Firebase Console > **Authentication > Einstellungen > Autorisierte Domains** > `tomsimmer.github.io` hinzufügen.
+
+## Hinweise
+- Der Firebase-API-Key im Frontend ist normal und kein Geheimnis. Geschützt sind die Daten durch Login und die Firestore-Regeln.
+- Wochenziel ändern: `WEEKLY_HOURS` in `firebase-config.js`.
+- Diktieren funktioniert in Chrome, Edge und Safari.
